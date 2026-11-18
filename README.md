@@ -4,7 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatch CORG - Gendarmerie Nationale</title>
+    <!-- Synchronisation temps réel sans compte ni inscription -->
+    <script src="https://jsdelivr.net"></script>
     <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gendarmerie-blue: #1d4ed8;
+            --gendarmerie-light: #3b82f6;
+            --status-dispo: #16a34a;
+            --status-patrouille: #2563eb;
+            --status-inter: #dc2626;
+            --status-indispo: #475569;
+            --command-gold: #eab308;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,8 +30,8 @@
         }
 
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             padding: 20px;
         }
 
@@ -67,8 +84,8 @@
 
         input, select, textarea {
             background-color: #0f172a;
-            border: 1px solid #334155;
-            color: #f8fafc;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
             padding: 8px 10px;
             border-radius: 6px;
             font-size: 0.9rem;
@@ -77,7 +94,7 @@
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--gendarmerie-light);
         }
 
         .sync-badge {
@@ -86,19 +103,15 @@
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: bold;
-            background-color: #d97706;
-            color: white;
-        }
-
-        .sync-online {
             background-color: #16a34a;
+            color: white;
         }
 
         .section-title {
             font-size: 1.2rem;
             margin: 25px 0 15px 0;
             padding-bottom: 8px;
-            border-bottom: 2px solid #334155;
+            border-bottom: 2px solid var(--border-color);
             color: #93c5fd;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -117,9 +130,9 @@
         }
 
         .command-card {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-top: 4px solid #eab308;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--command-gold);
             border-radius: 10px;
             padding: 16px;
             display: flex;
@@ -129,7 +142,7 @@
 
         .command-card.section-leader {
             border-top-color: #f97316;
-            background: linear-gradient(180deg, rgba(249, 115, 22, 0.08) 0%, #1e293b 100%);
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.08) 0%, var(--bg-card) 100%);
         }
 
         .command-header {
@@ -179,20 +192,21 @@
         }
 
         .unit-card {
-            background-color: #1e293b;
-            border: 1px solid #334155;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            border-top: 5px solid #475569;
+            border-top: 5px solid var(--status-indispo);
+            transition: transform 0.15s ease;
         }
 
-        .unit-card.status-dispo { border-top-color: #16a34a; }
-        .unit-card.status-patrouille { border-top-color: #2563eb; }
-        .unit-card.status-inter { border-top-color: #dc2626; }
-        .unit-card.status-indispo { border-top-color: #475569; opacity: 0.85; }
+        .unit-card.status-dispo { border-top-color: var(--status-dispo); }
+        .unit-card.status-patrouille { border-top-color: var(--status-patrouille); }
+        .unit-card.status-inter { border-top-color: var(--status-inter); }
+        .unit-card.status-indispo { border-top-color: var(--status-indispo); opacity: 0.85; }
 
         .card-header {
             display: flex;
@@ -222,7 +236,7 @@
 
         .form-group label {
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
 
         .leader-label {
@@ -265,8 +279,8 @@
         }
 
         .zone-box {
-            background-color: #1e293b;
-            border: 1px solid #334155;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 15px;
         }
@@ -291,7 +305,7 @@
         <h1>Centre Opérationnel (CORG)</h1>
         <span>Dispatch Gendarmerie - Temps Réel</span>
         <div style="margin-top: 8px;">
-            <span id="syncStatus" class="sync-badge">Connexion au réseau en cours...</span>
+            <span id="syncStatus" class="sync-badge">Synchronisation Temps Réel Active</span>
         </div>
     </div>
 
@@ -333,26 +347,4 @@
         <div class="form-group">
             <label>Gradé Chef de Groupe 01</label>
             <input type="text" id="cmd_g1_name" placeholder="Ex: Adj-Chef Bernard" oninput="saveCommand()">
-        </div>
-        <div class="row-2">
-            <div class="form-group">
-                <label>Patrouille 1</label>
-                <select id="cmd_g1_u1" onchange="saveCommand()"></select>
-            </div>
-            <div class="form-group">
-                <label>Patrouille 2</label>
-                <select id="cmd_g1_u2" onchange="saveCommand()"></select>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chef de Groupe 02 -->
-    <div class="command-card">
-        <div class="command-header">
-            <h3>Chef de Groupe 02</h3>
-            <span class="command-badge">2 Patrouilles</span>
-        </div>
-        <div class="form-group">
-            <label>Gradé Chef de Groupe 02</label>
-            <input type="text" id="cmd_g2_name" placeholder="Ex: MDC Petit" oninput="saveCommand()">
         </div>
