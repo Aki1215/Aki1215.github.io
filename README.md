@@ -3,25 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispatch CORG - Gendarmerie Nationale</title>
-    <!-- Synchronisation temps réel sans compte ni inscription -->
-    <script src="https://jsdelivr.net"></script>
+    <title>Dispatch CORG - Gendarmerie</title>
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --border-color: #334155;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --gendarmerie-blue: #1d4ed8;
-            --gendarmerie-light: #3b82f6;
-            --status-dispo: #16a34a;
-            --status-patrouille: #2563eb;
-            --status-inter: #dc2626;
-            --status-indispo: #475569;
-            --command-gold: #eab308;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -30,8 +13,8 @@
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: #0f172a;
+            color: #f8fafc;
             padding: 20px;
         }
 
@@ -40,7 +23,7 @@
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(90deg, #172554 0%, #1e3a8a 100%);
+            background: #1e3a8a;
             padding: 20px;
             border-radius: 10px;
             border-bottom: 4px solid #ef4444;
@@ -50,17 +33,17 @@
 
         .header-title h1 {
             font-size: 1.6rem;
-            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .header-title span {
+        .header-title p {
             font-size: 0.85rem;
             color: #93c5fd;
+            margin-top: 4px;
         }
 
         .corg-box {
-            background-color: rgba(15, 23, 42, 0.7);
+            background-color: #0f172a;
             padding: 12px 18px;
             border-radius: 8px;
             border: 1px solid #3b82f6;
@@ -82,10 +65,46 @@
             gap: 10px;
         }
 
+        .actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-share {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-share:hover {
+            background-color: #15803d;
+        }
+
+        .btn-clear-all {
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-clear-all:hover {
+            background-color: #b91c1c;
+        }
+
         input, select, textarea {
             background-color: #0f172a;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
+            border: 1px solid #334155;
+            color: #f8fafc;
             padding: 8px 10px;
             border-radius: 6px;
             font-size: 0.9rem;
@@ -94,32 +113,21 @@
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: var(--gendarmerie-light);
-        }
-
-        .sync-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            background-color: #16a34a;
-            color: white;
+            border-color: #3b82f6;
         }
 
         .section-title {
             font-size: 1.2rem;
             margin: 25px 0 15px 0;
             padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid #334155;
             color: #93c5fd;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .command-title {
             color: #fde047;
-            border-bottom-color: rgba(234, 179, 8, 0.4);
+            border-bottom-color: #854d0e;
         }
 
         .command-grid {
@@ -130,9 +138,9 @@
         }
 
         .command-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--command-gold);
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-top: 4px solid #eab308;
             border-radius: 10px;
             padding: 16px;
             display: flex;
@@ -142,7 +150,6 @@
 
         .command-card.section-leader {
             border-top-color: #f97316;
-            background: linear-gradient(180deg, rgba(249, 115, 22, 0.08) 0%, var(--bg-card) 100%);
         }
 
         .command-header {
@@ -156,24 +163,13 @@
             color: #fef08a;
         }
 
-        .command-card.section-leader .command-header h3 {
-            color: #fdba74;
-        }
-
         .command-badge {
             font-size: 0.72rem;
             padding: 3px 8px;
             border-radius: 4px;
-            background-color: rgba(234, 179, 8, 0.15);
+            background-color: #422006;
             color: #fde047;
-            border: 1px solid rgba(234, 179, 8, 0.3);
             font-weight: bold;
-        }
-
-        .section-leader .command-badge {
-            background-color: rgba(249, 115, 22, 0.15);
-            color: #fdba74;
-            border-color: rgba(249, 115, 22, 0.3);
         }
 
         .command-summary {
@@ -185,6 +181,32 @@
             border-left: 3px solid #f97316;
         }
 
+        .zones-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .zone-box {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .zone-box h3 {
+            color: #60a5fa;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .zone-units {
+            font-size: 0.9rem;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -192,21 +214,20 @@
         }
 
         .unit-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background-color: #1e293b;
+            border: 1px solid #334155;
             border-radius: 10px;
             padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            border-top: 5px solid var(--status-indispo);
-            transition: transform 0.15s ease;
+            border-top: 6px solid #475569;
         }
 
-        .unit-card.status-dispo { border-top-color: var(--status-dispo); }
-        .unit-card.status-patrouille { border-top-color: var(--status-patrouille); }
-        .unit-card.status-inter { border-top-color: var(--status-inter); }
-        .unit-card.status-indispo { border-top-color: var(--status-indispo); opacity: 0.85; }
+        .unit-card.status-dispo { border-top-color: #16a34a; }
+        .unit-card.status-patrouille { border-top-color: #2563eb; }
+        .unit-card.status-inter { border-top-color: #dc2626; }
+        .unit-card.status-indispo { border-top-color: #475569; opacity: 0.85; }
 
         .card-header {
             display: flex;
@@ -236,7 +257,7 @@
 
         .form-group label {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: #94a3b8;
         }
 
         .leader-label {
@@ -263,38 +284,11 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.8rem;
-            margin-top: 4px;
         }
 
         .btn-reset:hover {
             background-color: #475569;
             color: white;
-        }
-
-        .zones-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .zone-box {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .zone-box h3 {
-            color: #60a5fa;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        .zone-units {
-            font-size: 0.9rem;
-            color: #e2e8f0;
-            min-height: 24px;
         }
     </style>
 </head>
@@ -303,24 +297,25 @@
 <header>
     <div class="header-title">
         <h1>Centre Opérationnel (CORG)</h1>
-        <span>Dispatch Gendarmerie - Temps Réel</span>
-        <div style="margin-top: 8px;">
-            <span id="syncStatus" class="sync-badge">Synchronisation Temps Réel Active</span>
-        </div>
+        <p>Dispatch Gendarmerie - Kavala / Athira / Pyrgos</p>
     </div>
 
     <div class="corg-box">
         <label>Opérateur(s) CORG en service</label>
         <div class="corg-inputs">
-            <input type="text" id="corg_main" placeholder="Opérateur Principal (ex: Maj. Dupont)" oninput="saveCorg()">
-            <input type="text" id="corg_adj" placeholder="Adjoint CORG (Optionnel)" oninput="saveCorg()">
+            <input type="text" id="corg_main" placeholder="Opérateur Principal (ex: Maj. Dupont)" oninput="saveAll()">
+            <input type="text" id="corg_adj" placeholder="Adjoint CORG" oninput="saveAll()">
         </div>
+    </div>
+
+    <div class="actions-bar">
+        <button class="btn-share" id="btnShare" onclick="copyShareLink()">Copier le lien à jour</button>
+        <button class="btn-clear-all" onclick="resetAll()">Tout vider</button>
     </div>
 </header>
 
 <h2 class="section-title command-title">Chaîne de Commandement</h2>
 <div class="command-grid">
-    <!-- Chef de Section -->
     <div class="command-card section-leader">
         <div class="command-header">
             <h3>Chef de Section</h3>
@@ -328,17 +323,14 @@
         </div>
         <div class="form-group">
             <label>Commandant de Section</label>
-            <input type="text" id="cmd_section_name" placeholder="Ex: Lt. Moreau" oninput="saveCommand()">
+            <input type="text" id="cmd_section_name" placeholder="Ex: Lt. Moreau" oninput="saveAll()">
         </div>
         <div class="form-group">
             <label>Supervision (Groupe 01 + Groupe 02)</label>
-            <div class="command-summary" id="section_summary">
-                Aucune patrouille affectée
-            </div>
+            <div class="command-summary" id="section_summary">Aucune patrouille affectée</div>
         </div>
     </div>
 
-    <!-- Chef de Groupe 01 -->
     <div class="command-card">
         <div class="command-header">
             <h3>Chef de Groupe 01</h3>
@@ -346,5 +338,29 @@
         </div>
         <div class="form-group">
             <label>Gradé Chef de Groupe 01</label>
-            <input type="text" id="cmd_g1_name" placeholder="Ex: Adj-Chef Bernard" oninput="saveCommand()">
+            <input type="text" id="cmd_g1_name" placeholder="Ex: Adj-Chef Bernard" oninput="saveAll()">
         </div>
+        <div class="row-2">
+            <div class="form-group">
+                <label>Patrouille 1</label>
+                <select id="cmd_g1_u1" onchange="saveAll()"></select>
+            </div>
+            <div class="form-group">
+                <label>Patrouille 2</label>
+                <select id="cmd_g1_u2" onchange="saveAll()"></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="command-card">
+        <div class="command-header">
+            <h3>Chef de Groupe 02</h3>
+            <span class="command-badge">2 Patrouilles</span>
+        </div>
+        <div class="form-group">
+            <label>Gradé Chef de Groupe 02</label>
+            <input type="text" id="cmd_g2_name" placeholder="Ex: MDC Petit" oninput="saveAll()">
+        </div>
+        <div class="row-2">
+            <div class="form-group">
+                <label>Patrouille 3</label>
